@@ -19,6 +19,7 @@ static void mstatus_init()
   uintptr_t ms = 0;
   ms = INSERT_FIELD(ms, MSTATUS_VM, VM_CHOICE);
   ms = INSERT_FIELD(ms, MSTATUS_FS, 1);
+  ms = INSERT_FIELD(ms, MSTATUS_XS, 1);
   write_csr(mstatus, ms);
 
   // Make sure the hart actually supports the VM mode we want
@@ -34,7 +35,7 @@ static void mstatus_init()
 // send S-mode interrupts and most exceptions straight to S-mode
 static void delegate_traps()
 {
-  uintptr_t interrupts = MIP_SSIP | MIP_STIP | MIP_SEIP;
+  uintptr_t interrupts = MIP_SSIP | MIP_STIP | MIP_SEIP | MIP_ROCC;
   uintptr_t exceptions =
     (1U << CAUSE_MISALIGNED_FETCH) |
     (1U << CAUSE_FAULT_FETCH) |
